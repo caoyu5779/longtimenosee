@@ -9,6 +9,7 @@ func reverse(x int) int{
 		lable := 1
 		if (x < 0){
 			lable = -1
+			x = lable * x
 		}
 
 		res := 0
