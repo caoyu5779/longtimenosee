@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"strings"
 	"log"
+	"html/template"
+	"net/url"
 )
 
 func sayHelloName(w http.ResponseWriter, r *http.Request){
@@ -20,8 +22,22 @@ func sayHelloName(w http.ResponseWriter, r *http.Request){
 	fmt.Fprintf(w, "Hello Chaos")
 }
 
+func login(w http.ResponseWriter, r *http.Request){
+	fmt.Println("method", r.Method)
+	if r.Method == "GET"{
+		v := url.Values{}
+		fmt.Println(v)
+		t,_ := template.ParseFiles("login.gtpl")
+		log.Println(t.Execute(w, nil))
+	} else {
+		r.ParseForm()
+		fmt.Println("username:" , r.Form["username"])
+		fmt.Println("password", r.Form["password"])
+	}
+}
 func main(){
 	http.HandleFunc("/", sayHelloName)
+	http.HandleFunc("/login", login)
 	error := http.ListenAndServe(":9090", nil)
 	if error != nil{
 		log.Fatal("ListenAndServe:", error)
